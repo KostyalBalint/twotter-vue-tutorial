@@ -5,7 +5,7 @@
         <router-link to="/">
           <h3 class="text-white mb-0">Twotter</h3>
         </router-link>
-        <span class="navbar-brand mb-0 h1 text-white">@{{ user.username }}</span>
+        <span class="navbar-brand mb-0 h1 text-white" v-if="user">@{{ user.username }}</span>
       </div>
     </nav>
     <router-view/>
@@ -14,13 +14,16 @@
 </template>
 
 <script>
+  import { useStore } from 'vuex';
+  import { computed } from 'vue';
 export default {
   name: 'App',
-  data() {
+  setup() {
+    const store = useStore();
+    const user = computed(() => store.state.User.user);
+
     return {
-      user: {
-        username: 'UserName'
-      }
+      user
     }
   }
 }
