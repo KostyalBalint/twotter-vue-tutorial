@@ -11,19 +11,9 @@
             <div v-if="user.fawouriteTwootId">
                 Favourite twoot: {{ user.fawouriteTwootId }}
             </div>
-            <form class="user-profile__create-twoot" @submit.prevent="createNewTwoot" :class="{ '--exceeded': newTwootCharacterCount > 180}">
-                <label for="newTwoot"><strong>NewTwoot</strong> ({{ newTwootCharacterCount}} / 180)</label>
-                <textarea name="" id="newTwoot" rows="4" v-model="newTwootContent"/>
-                <div class="user-profile__create-twoot-type">
-                    <label for="newTwootType"><strong>Type: </strong></label>
-                    <select name="" id="newTwootType" v-model="selectedTwootType">
-                        <option :value="option.value" v-for="(option, index) in twootTypes" :key="index">
-                            {{ option.name }}
-                        </option>
-                    </select>
-                </div>
-                <button>Twoot!</button>
-            </form>
+
+            <CreateTwootPanel @add-twoot="addTwoot"/>
+
         </div>
         <div class="user-profile__twoots-wrapper">
             <TwootItem v-for="twoot in user.twootes" :key="twoot.id"
@@ -36,17 +26,12 @@
 
 <script>
 import TwootItem from "./TwootItem";
+import CreateTwootPanel from "./CreateTwootPanel";
   export default {
     name: "UserProfile",
-    components: { TwootItem },
+    components: { TwootItem, CreateTwootPanel },
     data(){
       return {
-        newTwootContent: '',
-        selectedTwootType: 'instant',
-        twootTypes: [
-          { value: 'draft', name: 'Draft'},
-          { value: 'instant', name: 'Instant Twoot'}
-        ],
         followers: 0,
         user: {
           id: 1,
@@ -58,40 +43,16 @@ import TwootItem from "./TwootItem";
           twootes: [
             { id: 1, content: 'Twotter is Amazing!'},
             { id: 2, content: 'Test twoot'},
-            { id: 3, content: 'Lorem ipsum'},
-          ],
-          fawouriteTwootId: null
+          ]
         }
-      }
-    },
-    watch: {
-      followers(newFollowerCount, oldFollowerCount){
-        if(oldFollowerCount < newFollowerCount){
-          console.log(`${this.user.username} has gained a follower`);
-        }
-      }
-    },
-    computed: {
-      newTwootCharacterCount() {
-        return this.newTwootContent.length;
       }
     },
     methods: {
-      followUser(){
-        this.followers++;
-      },
-      toggleFavourite(id){
-        console.log(`Favouriteded Twoot: ${id}`);
-        this.user.fawouriteTwootId = id;
-      },
-      createNewTwoot(){
-        if(this.newTwootContent && this.selectedTwootType !== 'draft'){
-          this.user.twootes.unshift({
-            id: this.user.twootes.length + 1,
-            content: this.newTwootContent
-          });
-          this.newTwootContent = '';
-        }
+      addTwoot(twoot) {
+        this.user.twootes.unshift({
+          id: this.user.twootes.length + 1,
+          content: twoot
+        });
       }
     }
   }
@@ -102,7 +63,8 @@ import TwootItem from "./TwootItem";
         display: grid;
         grid-template-columns: 1fr 3fr;
         width: 100%;
-        padding: 20px 5%;
+        padding: 50px 5%;
+
 
         .user-profile__user-panel{
             display: flex;
