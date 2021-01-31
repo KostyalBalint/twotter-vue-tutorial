@@ -8,13 +8,24 @@
             <div class="user-profile__follower-count">
                 <strong>Followers:</strong> {{ followers}}
             </div>
+            <div v-if="user.fawouriteTwootId">
+                Favourite twoot: {{ user.fawouriteTwootId }}
+            </div>
+        </div>
+        <div class="user-profile__twoots-wrapper">
+            <TwootItem v-for="twoot in user.twootes" :key="twoot.id"
+                        :username="user.username"
+                        :twoot="twoot"
+                        @favourite="toggleFavourite"/>
         </div>
     </div>
 </template>
 
 <script>
+import TwootItem from "./TwootItem";
   export default {
     name: "UserProfile",
+    components: { TwootItem },
     data(){
       return {
         followers: 0,
@@ -24,7 +35,13 @@
           firstName: 'User',
           lastName: 'Name',
           email: 'user.name@email.com',
-          isAdmin: true
+          isAdmin: true,
+          twootes: [
+            { id: 1, content: 'Twotter is Amazing!'},
+            { id: 2, content: 'Test twoot'},
+            { id: 3, content: 'Lorem ipsum'},
+          ],
+          fawouriteTwootId: null
         }
       }
     },
@@ -43,6 +60,10 @@
     methods: {
       followUser(){
         this.followers++;
+      },
+      toggleFavourite(id){
+        console.log(`Favouriteded Twoot: ${id}`);
+        this.user.fawouriteTwootId = id;
       }
     }
   }
@@ -53,7 +74,7 @@
         display: grid;
         grid-template-columns: 1fr 3fr;
         width: 100%;
-        padding: 50px 5%;
+        margin: 50px 5%;
     }
     .user-profile__user-panel{
         display: flex;

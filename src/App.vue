@@ -21,4 +21,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   margin-top: 20px;
 }
+  body{
+    background-color: aliceblue;
+  }
 </style>
