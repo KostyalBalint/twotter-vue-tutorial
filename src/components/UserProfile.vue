@@ -1,59 +1,60 @@
 <template>
     <div class="user-profile">
         <div class="user-profile__user-panel">
-            <h1 class="user-profile__username">@{{ user.username }}</h1>
-            <div class="user-profile__admin-badge" v-if="user.isAdmin">
+            <h1 class="user-profile__username">@{{ state.user.username }}</h1>
+            <div class="user-profile__admin-badge" v-if="state.user.isAdmin">
                 Admin
             </div>
             <div class="user-profile__follower-count">
-                <strong>Followers:</strong> {{ followers}}
-            </div>
-            <div v-if="user.fawouriteTwootId">
-                Favourite twoot: {{ user.fawouriteTwootId }}
+                <strong>Followers:</strong> {{ state.followers}}
             </div>
 
             <CreateTwootPanel @add-twoot="addTwoot"/>
 
         </div>
         <div class="user-profile__twoots-wrapper">
-            <TwootItem v-for="twoot in user.twootes" :key="twoot.id"
-                        :username="user.username"
-                        :twoot="twoot"
-                        @favourite="toggleFavourite"/>
+            <TwootItem v-for="twoot in state.user.twootes" :key="twoot.id"
+                        :username="state.user.username"
+                        :twoot="twoot"/>
         </div>
     </div>
 </template>
 
 <script>
+import { reactive } from 'vue';
 import TwootItem from "./TwootItem";
 import CreateTwootPanel from "./CreateTwootPanel";
   export default {
     name: "UserProfile",
     components: { TwootItem, CreateTwootPanel },
-    data(){
-      return {
-        followers: 0,
-        user: {
-          id: 1,
-          username: 'UserName',
-          firstName: 'User',
-          lastName: 'Name',
-          email: 'user.name@email.com',
-          isAdmin: true,
-          twootes: [
-            { id: 1, content: 'Twotter is Amazing!'},
-            { id: 2, content: 'Test twoot'},
-          ]
-        }
-      }
-    },
-    methods: {
-      addTwoot(twoot) {
-        this.user.twootes.unshift({
-          id: this.user.twootes.length + 1,
-          content: twoot
+    setup(){
+        const state = reactive({
+          followers: 0,
+          user: {
+            id: 1,
+            username: 'UserName',
+            firstName: 'User',
+            lastName: 'Name',
+            email: 'user.name@email.com',
+            isAdmin: true,
+            twootes: [
+              { id: 1, content: 'Twotter is Amazing!'},
+              { id: 2, content: 'Test twoot'},
+            ]
+          }
         });
-      }
+
+        function addTwoot(twoot) {
+          state.user.twootes.unshift({
+            id: state.user.twootes.length + 1,
+            content: twoot
+          });
+        }
+
+        return {
+          state,
+          addTwoot
+        }
     }
   }
 </script>

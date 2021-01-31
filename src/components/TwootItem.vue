@@ -23,11 +23,6 @@
         type: Object,
         required: true
       }
-    },
-    methods: {
-      favoriteTwoot(id){
-        this.$emit('favourite', id);
-      }
     }
   }
 </script>
